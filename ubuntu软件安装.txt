@@ -1,0 +1,2 @@
+1.软件的安装目录放置在/opt/目录下
+2.要建立桌面快捷方式需要在/usr/share/applications/下新建.desktop文件，并配置
