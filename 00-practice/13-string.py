@@ -20,6 +20,7 @@
 	第一个为填充后的字符串长度，第二个为被用作填充的字符
 11.删除空白strip(),lstrip(),rstrip(),也可传入想要删除的字符
 12.pyperclip下的copy(str)和paste(),前者将str发送到计算机的剪贴版，后者输出剪贴版的内容
+13.字符串占位符 print('hello %s' %'world')打印‘hello world’ 
 """
 import pyperclip
 print('*'.join(['hello', 'world']))#hello*world
