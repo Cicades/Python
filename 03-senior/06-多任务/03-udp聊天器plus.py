@@ -4,7 +4,9 @@ import threading
 
 def send_msg(udp_socket):
 	while True:
-		ip = input('请输入目标主机ip：')
+		ip = input('请输入目标主机ip(exit：强制推出)：')
+		if ip == 'exit':
+			udp_socket.close()
 		port = input('请输入目标主机端口：')
 		msg = input('请输入要发送的内容：')
 		udp_socket.sendto(msg.encode('gbk'), (ip, int(port)))
@@ -25,9 +27,8 @@ def main():
 	send_thread = threading.Thread(target=send_msg, args=(udp_socket, ))
 	send_thread.start()
 	# 接受消息
-	# recv_thread = threading.Thread(target=recv_msg, args=(udp_socket,))
-	# recv_thread.start()
-	udp_socket.close()
+	recv_thread = threading.Thread(target=recv_msg, args=(udp_socket,))
+	recv_thread.start()
 
 if __name__ == '__main__':
 	main()
