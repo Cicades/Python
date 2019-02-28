@@ -23,6 +23,7 @@
 		-- select .... from 表名 where .....
 		-- >
 		-- 查询大于18岁的信息
+		select * from students where age > 18;
 		-- <
 		-- 查询小于18岁的信息
 		-- >=
@@ -34,10 +35,12 @@
 	-- 逻辑运算符
 		-- and
 		-- 18到28之间的所以学生信息
+		select * from students where age between 18 and 28;
 		-- 失败select * from students where age>18 and <28;
 		-- 18岁以上的女性
 		-- or
 		-- 18以上或者身高查过180(包含)以上
+		select * from student where age > 18 or height >= 180;
 		-- not
 		-- 不在 18岁以上的女性 这个范围内的信息
 		-- select * from students where not age>18 and gender=2;
@@ -76,7 +79,6 @@
 	-- 查询年龄在18到34岁之间的女性，身高从高到矮排序
 	-- order by 多个字段
 	-- 查询年龄在18到34岁之间的女性，身高从高到矮排序, 如果身高相同的情况下按照年龄从小到大排序
-	-- 查询年龄在18到34岁之间的女性，身高从高到矮排序, 如果身高相同的情况下按照年龄从小到大排序,
 	-- 如果年龄也相同那么按照id从大到小排序
 	-- 按照年龄从小到大、身高从高到矮的排序
 -- 聚合函数
