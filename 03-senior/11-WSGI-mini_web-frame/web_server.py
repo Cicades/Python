@@ -21,7 +21,7 @@ class WSGIServer(object):
         request_target = re.match(r'[^/]+([^ ]+)', request_lines[0]).group(1)
         request_target = request_target if request_target != '/' else '/index.py'
         print('the request url is %s' % request_target)
-        if not request_target.endswith('.py'):
+        if not request_target.endswith('.html'):
             """响应静态资源"""
             try:
                 file = open(self.static_path + request_target, 'rb')
