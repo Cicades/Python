@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>图书信息</title>
+</head>
+<body>
+	<h1>图书列表</h1>
+	<hr>
+	<ul>
+		{% for book in books %}
+			<li><a href="/books/{{ book.id }}">{{ book.btitle }}</a></li>
+		{% endfor %}
+	</ul>
+</body>
+</html>

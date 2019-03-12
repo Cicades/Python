@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>图书信息</title>
+</head>
+<body>
+	<h1>《{{ book.btitle }}》</h1>
+	<hr>
+	<ul>
+		{% for hero in heros %}
+			<li>{{hero.hname}} -----&gt; {{hero.hskill}}</li>
+		{% endfor %}
+	</ul>
+</body>
+</html>
