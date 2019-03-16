@@ -1,5 +1,3 @@
-
-
 class FibnacciIterator(object):
 	"""使用迭代器实现Fibonacci数列"""
 	def __init__(self, times):
@@ -10,7 +8,7 @@ class FibnacciIterator(object):
 	
 	def __iter__(self):
 		"""判断一个对象是不是可遍历的，最直观的是看他有没有__iter__方法"""
-		return self  # 发挥的对象就是遍历器，其一定要包含__next__方法
+		return self  # 返回的对象就是遍历器，其一定要包含__next__方法
 
 	def __next__(self):
 		"""迭代器的核心方法，用来存储值生成的方式"""

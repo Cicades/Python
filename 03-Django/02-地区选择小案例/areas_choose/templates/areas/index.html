@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>地区选择</title>
+</head>
+<body>
+	<select id="prov">
+		<option>请选择省份</option>
+	</select>
+	<select id="city">
+		<option></option>
+	</select>
+	<select id="region">
+		<option></option>
+	</select>
+<script src="/static/js/jquery.js"></script>
+<script type="text/javascript">
+	$(function ($) {
+		let getRegionList = function (url, selector, callback=null) {
+			$.get(url, function (res) {
+				res.data.forEach(function (item) {
+					$(selector).append(`<option value="${item.id}">${item.name}</option>`)
+				})
+				callback && callback()
+			})
+		}
+		// 获取省份
+		getRegionList('/get_prov', '#prov')
+		// 获取城市
+		$('#prov').on('change', function () {
+			$(this).nextAll().empty()
+			let parentId = $(this).val()
+			getRegionList(`/get_city?parent=${parentId}`, '#city', function () {
+				getRegionList(`/get_region?parent=${$('#city').val()}`, '#region')
+			})
+		})
+		// 获取区域
+		$('#city').on('change', function () {
+			$(this).next().empty()
+			let parentId = $(this).val()
+			getRegionList(`/get_region?parent=${parentId}`, '#region')
+		})
+	})
+</script>
+</body>
+</html>
