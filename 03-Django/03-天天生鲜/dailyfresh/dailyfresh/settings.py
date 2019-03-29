@@ -152,3 +152,13 @@ SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 SESSION_SAVE_EVERY_REQUEST = True  # 为保证session的过期时间设置有效，此项必须设置为True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # session的生命周期为浏览器会话周期
+
+# 配置django文件存储类
+DEFAULT_FILE_STORAGE = 'utils.fdfs.storage.FDFSStorage'
+
+# 设置fdfs使用的client.conf文件路径
+FDFS_CLIENT_CONF='./utils/fdfs/client.conf'
+
+# 设置fdfs存储服务器上nginx的IP和端口号
+FDFS_URL='http://172.16.179.131:8888/'
+
