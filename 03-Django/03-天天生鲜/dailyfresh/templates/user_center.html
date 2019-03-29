@@ -1,0 +1,18 @@
+{% extends 'user_cart.html' %}
+{% block title%}{% endblock %}
+{% block head_files %}{% endblock %}
+{% block main_content %}
+    <div class="main_con clearfix">
+    {% block left_menu_con %}
+        <div class="left_menu_con clearfix">
+			<h3>用户中心</h3>
+			<ul>
+				<li><a href="{% url 'user:user_info' %}" class="{% if is_active == 'info' %}active{% endif %}">· 个人信息</a></li>
+				<li><a href="{% url 'user:order' %}" class="{% if is_active == 'order' %}active{% endif %}">· 全部订单</a></li>
+				<li><a href="{% url 'user:site' %}" class="{% if is_active == 'site' %}active{% endif %}">· 收货地址</a></li>
+			</ul>
+		</div>
+    {% endblock %}
+    {% block right_content %}{% endblock %}
+    </div>
+{% endblock %}

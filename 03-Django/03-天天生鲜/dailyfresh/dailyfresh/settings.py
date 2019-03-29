@@ -132,3 +132,23 @@ EMAIL_HOST_USER = 'cicades@163.com'
 EMAIL_HOST_PASSWORD = 'python666'
 # 收件人看到的发件人
 EMAIL_FROM = '天天生鲜<cicades@163.com>'
+
+#  登录地址
+LOGIN_URL = '/user/login'
+
+#  使用redis作为django缓存
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/3",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+#  使用redis存储session
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+SESSION_SAVE_EVERY_REQUEST = True  # 为保证session的过期时间设置有效，此项必须设置为True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # session的生命周期为浏览器会话周期
