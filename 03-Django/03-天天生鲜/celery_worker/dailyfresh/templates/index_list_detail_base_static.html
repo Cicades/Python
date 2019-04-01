@@ -1,0 +1,18 @@
+{% extends 'base_static.html' %}
+{% block title %}{% endblock %}
+{% block head_files %}{% endblock %}
+{% block main_content %}
+	<div class="navbar_con">
+		<div class="navbar">
+			<h1 class="fl">{% block navbar_title %}{% endblock %}</h1>
+			<ul class="navlist fl">
+				<li><a href="">首页</a></li>
+				<li class="interval">|</li>
+				<li><a href="">手机生鲜</a></li>
+				<li class="interval">|</li>
+				<li><a href="">抽奖</a></li>
+			</ul>
+		</div>
+	</div>
+    {% block sub_content %}{% endblock %}
+{% endblock %}

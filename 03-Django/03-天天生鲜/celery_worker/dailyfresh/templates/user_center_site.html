@@ -1,0 +1,44 @@
+{% extends 'user_center.html' %}
+{% block title %}天天生鲜用户中心{% endblock %}
+{% block head_files %}{% endblock %}
+{% block sub_page_name %}收货地址{% endblock %}
+{% block right_content %}
+    <div class="right_content clearfix">
+				<h3 class="common_title2">收货地址</h3>
+				<div class="site_con">
+                    {% if addr == None %}
+                        <dl>暂无默认收货地！</dl>
+                    {% else %}
+                        <dl>
+						    <dt>当前地址：</dt>
+						    <dd>{{ addr.addr }} （{{ addr.receiver }} 收） {{ addr.phone }}</dd>
+					    </dl>
+                    {% endif %}
+				</div>
+				<h3 class="common_title2">编辑地址</h3>
+				<div class="site_con">
+					<form action="{% url 'user:site' %}" method="post">
+                        <span style="color: #f00;width: 100%;display: inline-block;text-align: center">{{ errmsg }}</span>
+                        {% csrf_token %}
+						<div class="form_group">
+							<label>收件人：</label>
+							<input type="text" name="reciver">
+						</div>
+						<div class="form_group form_group2">
+							<label>详细地址：</label>
+							<textarea class="site_area" name="addr"></textarea>
+						</div>
+						<div class="form_group">
+							<label>邮编：</label>
+							<input type="text" name="zip_code">
+						</div>
+						<div class="form_group">
+							<label>手机：</label>
+							<input type="text" name="phone">
+						</div>
+
+						<input type="submit" name="" value="提交" class="info_submit">
+					</form>
+				</div>
+    </div>
+{% endblock %}

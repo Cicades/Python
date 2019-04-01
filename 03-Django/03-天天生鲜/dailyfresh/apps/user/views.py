@@ -107,6 +107,7 @@ class UserLogoutView(View):
 		logout(request)
 		return redirect(reverse('goods:index'))
 
+
 class UserInfoView(LoginRequiredMixin, View):
 	'''用户信息'''
 	def get(self, request):
