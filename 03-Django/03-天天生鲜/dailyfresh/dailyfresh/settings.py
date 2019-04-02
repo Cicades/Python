@@ -39,7 +39,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tinymce', # 富文本编辑器
+    'tinymce',  # 富文本编辑器
+    'haystack',  # haystack 全文检索引擎
     'user', # 用户模块
     'goods', # 商品模块
     'cart', # 购物车模块
@@ -161,4 +162,22 @@ FDFS_CLIENT_CONF='./utils/fdfs/client.conf'
 
 # 设置fdfs存储服务器上nginx的IP和端口号
 FDFS_URL='http://localhost:8888/'
+
+# 全文检索框架的配置
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        # 'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        # 使用whoose搜索引擎,但默认的Analyzer对中文不是很友好，所以使用jieba包自定义analyzer
+        # jieba分词基本用法:jieba.cut(value, cut_all=true)  对传入的value进行分词，返回分词结果生成器
+        'ENGINE': 'haystack.backends.whoosh_cn_backend.WhooshEngine',  # 使用修改过后的whoos_backend文件
+        # 索引文件存储的路径，不存时会自动创建
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+    }
+}
+
+# 当添加、修改、删除数据时，自动生成索引
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
+# 指定搜索结果每页显示的条数
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 1
 
