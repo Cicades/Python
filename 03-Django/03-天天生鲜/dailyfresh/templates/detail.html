@@ -44,7 +44,7 @@
 			<div class="goods_num clearfix">
 				<div class="num_name fl">数 量：</div>
 				<div class="num_add fl">
-					<input type="text" class="num_show fl" value="1">
+					<input type="text" class="num_show fl" value="1" data-goods-id="{{ sku.id }}">
 					<a href="javascript:;" class="add fr">+</a>
 					<a href="javascript:;" class="minus fr">-</a>
 				</div>
@@ -57,8 +57,9 @@
                     {% endfor %}
                 </ul>
             </div>
-			<div class="total">总价：<em>16.80元</em></div>
+			<div class="total">总价：<em>{{ sku.price }}元</em></div>
 			<div class="operate_btn">
+                {% csrf_token %}
 				<a href="javascript:;" class="buy_btn">立即购买</a>
 				<a href="javascript:;" class="add_cart" id="add_cart">加入购物车</a>
 			</div>
@@ -100,28 +101,65 @@
     {% block bottom_element %}
         <div class="add_jump"></div>
     {% endblock %}
-    {% block foot_files %}
+
+{% endblock %}
+{% block foot_files %}
         <script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
         <script type="text/javascript">
-            var $add_x = $('#add_cart').offset().top;
-            var $add_y = $('#add_cart').offset().left;
+            let $add_x = $('#add_cart').offset().top;
+            let $add_y = $('#add_cart').offset().left;
 
-            var $to_x = $('#show_count').offset().top;
-            var $to_y = $('#show_count').offset().left;
-
-            $(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'none'})
-            $('#add_cart').click(function(){
-                $(".add_jump").show().stop().animate({
-                    'left': $to_y+7,
-                    'top': $to_x+7},
-                    "fast", function() {
-                        $(".add_jump").fadeOut('fast',function(){
-                            $('#show_count').html(2);
-                            $(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'none'})
-                        });
-
-                });
+            let $to_x = $('#show_count').offset().top;
+            let $to_y = $('#show_count').offset().left;
+            let $goods_num_input = $('input.num_show')
+            let goods_num = 1
+            let price = parseFloat($('.show_pirze>em').text())
+            let csrfToken = $('input[name=csrfmiddlewaretoken]').val()
+            // 跟新总价
+            let updateMoney = function(){
+                $('.total>em').text((price * goods_num).toFixed(2) + '元')
+            }
+            // 购物车数量减少
+            $('a.minus').on('click', function () {
+                goods_num > 1 && $goods_num_input.val(--goods_num)
+                updateMoney()
             })
+            // 购物车数量添加
+            $('a.add').on('click', function () {
+                console.log(goods_num)
+                $goods_num_input.val(++goods_num)
+                updateMoney()
+            })
+            // 输入数字添加商品
+            $goods_num_input.on('blur', function () {
+                console.log('hhh')
+                let value = $(this).val()
+                if(isNaN(value)) return $goods_num_input.val(1)
+                if (value <= 0) return $goods_num_input.val(1)
+                $goods_num_input.val(Math.round(value))
+                goods_num = value
+                updateMoney()
+            })
+            // 添加购物车
+            $('#add_cart').on('click', function () {
+                let data = {
+                    sku_id: $goods_num_input.data('goodsId'),
+                    sku_num: goods_num,
+                    csrfmiddlewaretoken: csrfToken
+                }
+                $.post('/cart/add', data, function (data) {
+                    console.log(data.res === 'OK')
+                    $(".add_jump").show().stop().animate({
+                            'left': $to_y+7,
+                            'top': $to_x+7},
+                        "fast", function() {
+                            $(".add_jump").fadeOut('fast',function(){
+                                $(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'none'})
+                                data.res === 'OK' ? $('#show_count').text(data.cartCount) : alert(`添加失败:${data.res}\n详细信息：${data.errmsg}`)
+                            });
+                        });
+                })
+            })
+            $(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'none'})
         </script>
-    {% endblock %}
 {% endblock %}
