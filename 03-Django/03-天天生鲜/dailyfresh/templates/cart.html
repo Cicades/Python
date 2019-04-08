@@ -1,0 +1,162 @@
+{% extends 'user_cart.html' %}
+{% block  title %}购物车详细页{% endblock title %}
+{% block sub_page_name %}我的购物车{% endblock %}
+{% block main_content %}
+    {% csrf_token %}
+	<div class="total_count">全部商品<em>{{ goods_count }}</em>件</div>
+	<ul class="cart_list_th clearfix">
+		<li class="col01">商品名称</li>
+		<li class="col02">商品单位</li>
+		<li class="col03">商品价格</li>
+		<li class="col04">数量</li>
+		<li class="col05">小计</li>
+		<li class="col06">操作</li>
+	</ul>
+    <form action="{% url 'order:place_order' %}" method="post">
+    {% csrf_token %}
+    {% for sku in skus %}
+	<ul class="cart_list_td clearfix">
+		<li class="col01"><input type="checkbox" name="sku_id" checked value="{{ sku.id }}"></li>
+		<li class="col02"><img src="{{ sku.image.url }}"></li>
+		<li class="col03">{{ sku.name }}<br><em> {{ sku.price }}元/{{ sku.unite }}</em></li>
+		<li class="col04">{{ sku.unite }}</li>
+		<li class="col05">{{ sku.price }}元</li>
+		<li class="col06">
+			<div class="num_add">
+				<a href="javascript:;" class="add fl">+</a>
+				<input type="text" class="num_show fl" value="{{ sku.count }}">
+				<a href="javascript:;" class="minus fl">-</a>	
+			</div>
+		</li>
+		<li class="col07">{{ sku.total_price }}元</li>
+		<li class="col08"><a href="javascript:;">删除</a></li>
+        <input type="hidden" name="" class="skuid" value="{{ sku.id }}">
+	</ul>
+    {% endfor %}
+	<ul class="settlements">
+		<li class="col01"><input type="checkbox" name="" checked="" id="selectAll"></li>
+		<li class="col02">全选</li>
+		<li class="col03">合计(不含运费)：<span>¥</span><em>{{ total_price }}</em><br>共计<b>{{ goods_count }}</b>件商品</li>
+		<li class="col04"><button type="submit">去结算</button></li>
+	</ul>
+    </form>
+{% endblock %}
+{% load staticfiles %}
+{% block foot_files %}
+<script src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
+<script>
+    $(function ($) {
+        let $selectAll = $('#selectAll') // 全选checkbox
+        let $checkboxs = $('.cart_list_td>li:first-of-type>input') //checkboxs
+        // 点击全选实现全选与取消全选
+        $selectAll.on('change', function () {
+            $checkboxs.prop('checked', $selectAll.prop('checked'))
+        })
+        // 点击checkbox判断是否全选
+        $checkboxs.on('change', function () {
+            let flag = true
+            $checkboxs.each(function (index, item) {
+                flag = $(this).prop('checked')
+                return flag
+            })
+            $selectAll.prop('checked', flag)
+        })
+        // 增减商品数
+        let $numAdd = $('.num_add>a.add')
+        let $numMinus = $('.num_add>a.minus')
+        let $goods_num_input = $('.num_add>input.num_show')
+        let $totalPriceEle = $('.settlements>li:nth-of-type(3)>em')
+        let $subTotalPriceEles = $('.cart_list_td>li:nth-of-type(7)')
+        let $priceEle = $('.cart_list_td>li:nth-of-type(5)')
+        let totalPrice = parseFloat($totalPriceEle.text())
+        let $numShowEles = $('.num_show')
+        let csrfToken = $('input[name=csrfmiddlewaretoken]').val()
+        let $totalCountEle1 = $('.total_count>em')
+        let $totalCountEle2 = $('.settlements>li.col03>b')
+        let totalCount = parseInt($totalCountEle1.text())
+        console.log(totalCount)
+        // 跟新支付金额
+        let updateMoney = (index, that) => {
+            let price = parseFloat($priceEle.eq(index).text().replace('元', '')) * 100
+            let oldSubTotalPrice = that.total_price
+            that.total_price = (that.count * price) / 100 // 更新小计
+            $subTotalPriceEles.eq(index).text(that.total_price.toFixed(2) + '元')
+            let gap = that.total_price * 100 - oldSubTotalPrice * 100
+            totalPrice = (totalPrice * 100 + gap) / 100  // 更新订单金额
+            $totalPriceEle.text(totalPrice)
+            $totalCountEle1.text(totalCount)
+            $totalCountEle2.text(totalCount)
+            // 组织上下文
+            let skuId = $(that).parent().parent().siblings('.skuid').val()
+            let context = {
+                'sku_id': skuId,
+                'sku_num': that.count,
+                'csrfmiddlewaretoken': csrfToken
+            }
+            console.log(context)
+            // 发送ajax请求
+            $.post('{% url 'cart:update' %}', context, function(data){
+                if (data.res === 'OK')
+                    alert('成功！')
+                else
+                    alert('失败！')
+            })
+        }
+        // 购物车数量减少
+        $numMinus.on('click', function () {
+            let index = $numMinus.index($(this))
+            this.count = parseInt($numShowEles.eq(index).val())
+            this.total_price = parseFloat($subTotalPriceEles.eq(index).text().replace('元', ''))
+            if (this.count <= 1) return
+            $goods_num_input.eq(index).val(--this.count)
+            totalCount --
+            updateMoney(index, this)
+        })
+        // 购物车数量添加
+        $numAdd.on('click', function () {
+            let index = $numAdd.index($(this))
+            this.count = parseInt($numShowEles.eq(index).val())
+            this.total_price = parseFloat($subTotalPriceEles.eq(index).text().replace('元', ''))
+            $goods_num_input.eq(index).val(++this.count)
+            totalCount ++
+            updateMoney(index, this)
+        })
+        // 输入数字添加商品
+        $goods_num_input.on('blur', function () {
+            let index = $goods_num_input.index($(this))
+            this.count = parseInt($numShowEles.eq(index).val())
+            this.total_price = parseFloat($subTotalPriceEles.eq(index).text().replace('元', ''))
+            let value = $(this).val()
+            if(isNaN(value) || value <= 0){
+                $goods_num_input.eq(index).val(1)
+                totalCount += 1 - this.count
+                return this.count = 1
+            }
+            value = Math.round(value)
+            totalCount += value - this.count
+            this.count = value
+            $goods_num_input.eq(index).val(this.count)
+            updateMoney(index, this)
+        })
+        // 删除商品
+        $('.cart_list_td>li.col08>a').on('click', function () {
+            // 组织上下文
+            let skuId = $(this).parent().siblings('.skuid').val()
+            let context = {
+                'sku_id': skuId,
+                'csrfmiddlewaretoken': csrfToken
+            }
+            $.post('{% url 'cart:del' %}', context, data => {
+                if (data.res === 'OK') {
+                    $(this).parent().parent().remove()
+                    let subTotalPrice = parseFloat($(this).parent().prev().text().replace('元', ''))
+                    totalPrice = (totalPrice * 100 - subTotalPrice * 100) / 100
+                    $totalPriceEle.text(totalPrice.toFixed(2))
+                }
+                else
+                    alert(data.errmsg)
+            })
+        })
+    })
+</script>
+{% endblock %}
