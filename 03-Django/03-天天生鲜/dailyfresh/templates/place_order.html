@@ -91,24 +91,17 @@
                 let csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val()
                 let data = {addr, pay_method, skus, csrfmiddlewaretoken}
                 $.post('{% url 'order:commit' %}', data, function(data){
-                    alert(`状态：${data.res}\n详细：${data.errmsg}`)
+                    $('.popup_con').fadeIn('fast', function() {
+                        $(this).find('.popup>p').text(`状态：${data.res};详细信息：${data.errmsg}`)
+                        setTimeout(function(){
+                            $('.popup_con').fadeOut('fast',function(){
+                                window.location.href = '{% url 'user:order' 1 %}';
+                            });
+                        },3000)
+
+                    });
                 })
             })
         })
     </script>
-	<script type="text/javascript">
-	//	$('#order_btn').click(function() {
-	//		localStorage.setItem('order_finish',2);
-
-	//		$('.popup_con').fadeIn('fast', function() {
-
-	//			setTimeout(function(){
-	//				$('.popup_con').fadeOut('fast',function(){
-	//					window.location.href = 'index.html';
-	//				});
-	//			},3000)
-	//
-	//		});
-	//	});
-	</script>
 {% endblock %}

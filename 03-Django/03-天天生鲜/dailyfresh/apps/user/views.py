@@ -12,6 +12,8 @@ import re
 from django.conf import settings
 from user.models import User, Address
 from goods.models import GoodsSKU
+from order.models import OrderInfo, OrderGoods
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
 
 
@@ -127,8 +129,36 @@ class UserInfoView(LoginRequiredMixin, View):
 
 class UserOrderView(LoginRequiredMixin, View):
 	'''用户订单'''
-	def get(self, request):
-		context = {'is_active': 'order'}
+	def get(self, request, page):
+		user = request.user
+		# 获取订单信息
+		orders = OrderInfo.objects.filter(user=user)
+		for order in orders:
+			goods_list = OrderGoods.objects.filter(order=order).order_by('-create-time')
+			order.order_goods_list = goods_list
+			order.text_status = OrderInfo.ORDER_STATUS_LIST[order.order_status]
+		# 分页
+		page_size = 1
+		show_pages = 3  # 页码展示数
+		p = Paginator(orders, page_size)
+		try:
+			sub_page = p.page(page)
+		except EmptyPage:
+			sub_page = p.page(1)
+		except PageNotAnInteger:
+			sub_page = p.page(p.num_pages)
+		# 限制分页数量
+		page = int(page)
+		if show_pages >= p.num_pages:
+			page_index_range = range(1, p.num_pages + 1)
+		elif page <= (show_pages + 1) / 2:
+			page_index_range = range(1, show_pages + 1)
+		elif page > p.num_pages - (show_pages + 1) / 2:
+			page_index_range = range(p.num_pages - (show_pages + 1) // 2, p.num_pages + 1)
+		else:
+			page_index_range = range(page - show_pages // 2, page + show_pages // 2 + 1)
+		print(page_index_range)
+		context = {'orders': sub_page, 'is_active': 'order', 'page_index_range': page_index_range}
 		return render(request, 'user_center_order.html', context)
 
 	def post(self, request):

@@ -8,6 +8,6 @@ urlpatterns = [
 	url(r'^login$', UserLogin.as_view(), name='login'),
 	url(r'logout$', UserLogoutView.as_view(), name='logout'),
 	url(r'^info$', UserInfoView.as_view(), name='user_info'),
-	url(r'^order$', UserOrderView.as_view(), name='order'),
+	url(r'^order/(?P<page>\d+)$', UserOrderView.as_view(), name='order'),
 	url(r'^site$', UserSiteView.as_view(), name='site')
 ]
