@@ -1,4 +1,5 @@
 {% extends 'user_center.html' %}
+{% load staticfiles %}
 {% block title %}天天生鲜用户中心{% endblock %}
 {% block head_files %}{% endblock %}
 {% block sub_page_name %}全部订单{% endblock %}
@@ -28,10 +29,11 @@
 							<td width="15%">{{ order.total_price }}元</td>
 							<td width="15%">{{ order.text_status }}</td>
 							<td width="15%">
+                            {% csrf_token %}
                                 {% if order.order_status == 1 %}
-                                <a href="#" class="oper_btn">去支付</a>
-                                {% elif order.order_status == 2 %}
-                                <a href="#" class="oper_btn">查看物流</a>
+                                <a href="#" class="oper_btn" data-order-id="{{ order.order_id }}" data-status="{{ order.order_status }}">去支付</a>
+                                {% elif order.order_status == 4 %}
+                                <a href="#" class="oper_btn">去评价</a>
                                 {% endif %}
                             </td>
 						</tr>
@@ -52,4 +54,34 @@
                     <a href="{% url 'user:order' orders.paginator.num_pages %}">尾页</a>
 				</div>
 		</div>
+{% endblock %}
+{% block foot_files %}
+    <script src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
+    <script>
+        $(function ($) {
+            $('.oper_btn').on('click', function (e) {
+                e.preventDefault()
+                if ($(this).data('status') == '1') {
+                    let orderId = $(this).data('orderId')
+                    let csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val()
+                    let data = {orderId, csrfmiddlewaretoken}
+                    $.post('{% url 'user:pay' %}', data, function(res){
+                        if (res.res === 'OK'){
+                            // 打开支付页面
+                            window.open(res.pay_url)
+                            // 查询支付状态
+                            $.post('{% url 'user:query' %}', data, function(res){
+                                if (res.res === 'OK')
+                                    window.location.reload()
+                                else
+                                    alert(data.errmsg)
+                            })
+                        }
+                        else
+                            alert('支付失败;原因:' + res.errmsg)
+                    })
+                }
+            })
+        })
+    </script>
 {% endblock %}

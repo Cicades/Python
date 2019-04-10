@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from user.views import RegisterView, user_active, UserLogin, UserInfoView, UserSiteView, UserOrderView, UserLogoutView
+from user.views import RegisterView, user_active, UserLogin, UserInfoView, UserSiteView, UserOrderView, UserLogoutView, OrderPayView, OrderQueryView
 
 
 urlpatterns = [
@@ -9,5 +9,7 @@ urlpatterns = [
 	url(r'logout$', UserLogoutView.as_view(), name='logout'),
 	url(r'^info$', UserInfoView.as_view(), name='user_info'),
 	url(r'^order/(?P<page>\d+)$', UserOrderView.as_view(), name='order'),
-	url(r'^site$', UserSiteView.as_view(), name='site')
+	url(r'^site$', UserSiteView.as_view(), name='site'),
+	url(r'^pay$', OrderPayView.as_view(), name='pay'),
+	url(r'^query$', OrderQueryView.as_view(), name='query')
 ]

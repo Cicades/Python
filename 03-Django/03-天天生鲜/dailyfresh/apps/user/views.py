@@ -7,13 +7,16 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import SignatureExpired
 from django.shortcuts import render, redirect
 from django.views.generic import View
-from django.http import HttpResponse
-import re
+from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 from user.models import User, Address
 from goods.models import GoodsSKU
 from order.models import OrderInfo, OrderGoods
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from order.models import OrderInfo
+from alipay import AliPay
+import re
+import os
 # Create your views here.
 
 
@@ -134,7 +137,7 @@ class UserOrderView(LoginRequiredMixin, View):
 		# 获取订单信息
 		orders = OrderInfo.objects.filter(user=user)
 		for order in orders:
-			goods_list = OrderGoods.objects.filter(order=order).order_by('-create-time')
+			goods_list = OrderGoods.objects.filter(order=order).order_by('-create_time')
 			order.order_goods_list = goods_list
 			order.text_status = OrderInfo.ORDER_STATUS_LIST[order.order_status]
 		# 分页
@@ -187,3 +190,95 @@ class UserSiteView(LoginRequiredMixin, View):
 			address.is_default = True
 		address.save()
 		return redirect(reverse('user:site'))
+
+
+class OrderPayView(View):
+	"""支付"""
+	def post(self, request):
+		user = request.user
+		if not user.is_authenticated():
+			return JsonResponse({'res': 0, 'errmsg': '用户尚未登录!'})
+		order_id = request.POST.get('orderId')
+		if order_id is None:
+			return JsonResponse({'res': 1, 'errmsg': '尚未选择需要支付的订单！'})
+		try:
+			order = OrderInfo.objects.get(
+				order_id=order_id,
+				user=user,
+				order_status=1,  # 订单尚未支付
+				pay_method=3 # 支付方式为支付宝
+			)
+		except OrderInfo.DoesNotExist:
+			return JsonResponse({'res': 2, 'errmsg': '订单信息不合法！'})
+		app_private_key_string = open(os.path.join(settings.BASE_DIR, 'apps/order/app_private_key.pem')).read()
+		alipay_public_key_string = open(os.path.join(settings.BASE_DIR, 'apps/order/alipay_public_key.pem')).read()
+		alipay = AliPay(
+			appid="2016092700606291",
+			app_notify_url=None,  # 默认回调url
+			app_private_key_string=app_private_key_string,
+			# 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
+			alipay_public_key_string=alipay_public_key_string,
+			sign_type="RSA2",  # RSA 或者 RSA2(支付宝推荐)
+			debug=True  # 默认False,沙箱环境应设为True
+		)
+		# 电脑网站支付，需要跳转到https://openapi.alipay.com/gateway.do? + order_string
+		order_string = alipay.api_alipay_trade_page_pay(
+			out_trade_no=order_id,
+			total_amount=str(order.total_price + order.transit_price),
+			subject='天天生鲜在线支付:' + order_id,
+			return_url=None,
+			notify_url=None  # 可选, 不填则使用默认notify url
+		)
+		# 返回应答
+		pay_url = 'https://openapi.alipaydev.com/gateway.do?' + order_string
+		return JsonResponse({'res': 'OK', 'pay_url': pay_url})
+
+
+class OrderQueryView(View):
+	"""查询支付状态"""
+	def post(self, request):
+		user = request.user
+		if not user.is_authenticated():
+			return JsonResponse({'res': 0, 'errmsg': '用户尚未登录!'})
+		order_id = request.POST.get('orderId')
+		if order_id is None:
+			return JsonResponse({'res': 1, 'errmsg': '尚未选择需要支付的订单！'})
+		try:
+			order = OrderInfo.objects.get(
+				order_id=order_id,
+				user=user,
+				order_status=1,  # 订单尚未支付
+				pay_method=3  # 支付方式为支付宝
+			)
+		except OrderInfo.DoesNotExist:
+			return JsonResponse({'res': 2, 'errmsg': '订单信息不合法！'})
+		app_private_key_string = open(os.path.join(settings.BASE_DIR, 'apps/order/app_private_key.pem')).read()
+		alipay_public_key_string = open(os.path.join(settings.BASE_DIR, 'apps/order/alipay_public_key.pem')).read()
+		alipay = AliPay(
+			appid="2016092700606291",
+			app_notify_url=None,  # 默认回调url
+			app_private_key_string=app_private_key_string,
+			# 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
+			alipay_public_key_string=alipay_public_key_string,
+			sign_type="RSA2",  # RSA 或者 RSA2(支付宝推荐)
+			debug=True  # 默认False,沙箱环境应设为True
+		)
+		while True:
+			response = alipay.api_alipay_trade_query(order_id)
+			code = response.get('code')  # alipay网关状态
+			print(response)
+			if code == '10000' and response.get('trade_status') == 'TRADE_SUCCESS':
+				# 订单支付成功
+				order.trade_no = response.get('trade_no')
+				order.order_status = 4  # 订单待评价
+				order.save()
+				return JsonResponse({'res': 'OK', 'errmsg': '订单支付成功！'})
+			elif code == '40004' or (code == '10000' and response.get('trade_status') == 'WAIT_BUYER_PAY'):
+				# 订单正在处理
+				import time
+				time.sleep(5)
+				continue
+			else:
+				return JsonResponse({'res': 3, 'errmsg': response.get('msg')})
+
+
