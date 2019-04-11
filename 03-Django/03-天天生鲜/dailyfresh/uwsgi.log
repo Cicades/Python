@@ -1,0 +1,146 @@
+*** Starting uWSGI 2.0.18 (64bit) on [Thu Apr 11 12:00:07 2019] ***
+compiled with version: 7.3.0 on 11 April 2019 03:32:10
+os: Linux-4.4.0-17134-Microsoft #706-Microsoft Mon Apr 01 18:13:00 PST 2019
+nodename: VivaLaVida
+machine: x86_64
+clock source: unix
+pcre jit disabled
+detected number of CPU cores: 8
+current working directory: /mnt/f/study/python/demo/03-Django/03-天天生鲜/dailyfresh
+writing pidfile to uwsgi.pid
+detected binary path: /home/cicades/.virtualenvs/dailyfresh/bin/uwsgi
+chdir() to /mnt/f/study/python/demo/03-django/03-天天生鲜/dailyfresh/
+your processes number limit is 7823
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+!!! it looks like your kernel does not support pthread robust mutexes !!!
+!!! falling back to standard pthread mutexes !!!
+thunder lock: disabled (you can enable it with --thunder-lock)
+TCP_DEFER_ACCEPT setsockopt(): Protocol not available [core/socket.c line 744]
+TCP_DEFER_ACCEPT setsockopt(): Protocol not available [core/socket.c line 744]
+uWSGI http bound on 127.0.0.1:8000 fd 4
+uwsgi socket 0 bound to TCP address 127.0.0.1:51380 (port auto-assigned) fd 3
+Python version: 3.6.7 (default, Oct 22 2018, 11:32:17)  [GCC 8.2.0]
+Set PythonHome to /home/cicades/.virtualenvs/dailyfresh
+Python main interpreter initialized at 0x7fffc6031900
+python threads support enabled
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 416880 bytes (407 KB) for 8 cores
+*** Operational MODE: preforking+threaded ***
+WSGI app 0 (mountpoint='') ready in 2 seconds on interpreter 0x7fffc6031900 pid: 1167 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 1167)
+spawned uWSGI worker 1 (pid: 1171, cores: 2)
+spawned uWSGI worker 2 (pid: 1173, cores: 2)
+spawned uWSGI worker 3 (pid: 1175, cores: 2)
+spawned uWSGI worker 4 (pid: 1177, cores: 2)
+spawned uWSGI http 1 (pid: 1179)
+[pid: 1171|app: 0|req: 1/1] 127.0.0.1 () {42 vars in 1071 bytes} [Thu Apr 11 12:00:24 2019] GET /user/info => generated 5594 bytes in 2750 msecs (HTTP/1.1 200) 4 headers in 177 bytes (1 switches on core 0)
+[pid: 1173|app: 0|req: 1/2] 127.0.0.1 () {42 vars in 1071 bytes} [Thu Apr 11 12:00:29 2019] GET /user/info => generated 5594 bytes in 2439 msecs (HTTP/1.1 200) 4 headers in 177 bytes (1 switches on core 0)
+[pid: 1171|app: 0|req: 2/3] 127.0.0.1 () {38 vars in 972 bytes} [Thu Apr 11 12:00:37 2019] GET / => generated 14193 bytes in 320 msecs (HTTP/1.1 200) 4 headers in 177 bytes (1 switches on core 1)
+[pid: 1171|app: 0|req: 3/4] 127.0.0.1 () {42 vars in 1024 bytes} [Thu Apr 11 12:01:22 2019] GET / => generated 14193 bytes in 242 msecs (HTTP/1.1 200) 4 headers in 177 bytes (1 switches on core 0)
+[pid: 1171|app: 0|req: 4/5] 127.0.0.1 () {42 vars in 998 bytes} [Thu Apr 11 12:01:22 2019] GET /static/css/main.css => generated 93 bytes in 12 msecs (HTTP/1.1 404) 3 headers in 155 bytes (1 switches on core 1)
+[pid: 1171|app: 0|req: 6/6] 127.0.0.1 () {42 vars in 1005 bytes} [Thu Apr 11 12:01:23 2019] GET /static/js/jquery-1.12.4.min.js => generated 104 bytes in 7 msecs (HTTP/1.1 404) 3 headers in 155 bytes (1 switches on core 0)
+[pid: 1171|app: 0|req: 6/7] 127.0.0.1 () {42 vars in 997 bytes} [Thu Apr 11 12:01:23 2019] GET /static/js/jquery-ui.min.js => generated 100 bytes in 12 msecs (HTTP/1.1 404) 3 headers in 155 bytes (2 switches on core 1)
+[pid: 1173|app: 0|req: 2/8] 127.0.0.1 () {42 vars in 1025 bytes} [Thu Apr 11 12:01:23 2019] GET /static/images/logo.png => generated 96 bytes in 13 msecs (HTTP/1.1 404) 3 headers in 155 bytes (1 switches on core 1)
+[pid: 1177|app: 0|req: 2/9] 127.0.0.1 () {42 vars in 981 bytes} [Thu Apr 11 12:01:23 2019] GET /static/js/slide.js => generated 92 bytes in 1629 msecs (HTTP/1.1 404) 3 headers in 155 bytes (2 switches on core 1)
+[pid: 1177|app: 0|req: 2/10] 127.0.0.1 () {42 vars in 1000 bytes} [Thu Apr 11 12:01:22 2019] GET /static/css/reset.css => generated 94 bytes in 1940 msecs (HTTP/1.1 404) 3 headers in 155 bytes (2 switches on core 0)
+[pid: 1171|app: 0|req: 7/11] 127.0.0.1 () {42 vars in 998 bytes} [Thu Apr 11 12:01:25 2019] GET /static/js/jquery-ui.min.js => generated 100 bytes in 14 msecs (HTTP/1.1 404) 3 headers in 155 bytes (1 switches on core 0)
+[pid: 1171|app: 0|req: 8/12] 127.0.0.1 () {42 vars in 982 bytes} [Thu Apr 11 12:01:25 2019] GET /static/js/slide.js => generated 92 bytes in 13 msecs (HTTP/1.1 404) 3 headers in 155 bytes (1 switches on core 1)
+SIGINT/SIGQUIT received...killing workers...
+gateway "uWSGI http 1" has been buried (pid: 1179)
+worker 1 buried after 1 seconds
+worker 2 buried after 1 seconds
+worker 3 buried after 1 seconds
+worker 4 buried after 1 seconds
+goodbye to uWSGI.
+*** Starting uWSGI 2.0.18 (64bit) on [Thu Apr 11 18:31:03 2019] ***
+compiled with version: 7.3.0 on 11 April 2019 03:32:10
+os: Linux-4.4.0-17134-Microsoft #706-Microsoft Mon Apr 01 18:13:00 PST 2019
+nodename: VivaLaVida
+machine: x86_64
+clock source: unix
+pcre jit disabled
+detected number of CPU cores: 8
+current working directory: /mnt/f/study/python/demo/03-Django/03-天天生鲜/dailyfresh
+writing pidfile to uwsgi.pid
+detected binary path: /home/cicades/.virtualenvs/dailyfresh/bin/uwsgi
+chdir() to /mnt/f/study/python/demo/03-django/03-天天生鲜/dailyfresh/
+your processes number limit is 7823
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+!!! it looks like your kernel does not support pthread robust mutexes !!!
+!!! falling back to standard pthread mutexes !!!
+thunder lock: disabled (you can enable it with --thunder-lock)
+TCP_DEFER_ACCEPT setsockopt(): Protocol not available [core/socket.c line 744]
+TCP_DEFER_ACCEPT setsockopt(): Protocol not available [core/socket.c line 744]
+uWSGI http bound on 127.0.0.1:8000 fd 4
+uwsgi socket 0 bound to TCP address 127.0.0.1:58179 (port auto-assigned) fd 3
+Python version: 3.6.7 (default, Oct 22 2018, 11:32:17)  [GCC 8.2.0]
+Set PythonHome to /home/cicades/.virtualenvs/dailyfresh
+Python main interpreter initialized at 0x7fffe18f7920
+python threads support enabled
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 416880 bytes (407 KB) for 8 cores
+*** Operational MODE: preforking+threaded ***
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0x7fffe18f7920 pid: 1318 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 1318)
+spawned uWSGI worker 1 (pid: 1322, cores: 2)
+spawned uWSGI worker 2 (pid: 1324, cores: 2)
+spawned uWSGI worker 3 (pid: 1326, cores: 2)
+spawned uWSGI worker 4 (pid: 1328, cores: 2)
+spawned uWSGI http 1 (pid: 1330)
+SIGINT/SIGQUIT received...killing workers...
+gateway "uWSGI http 1" has been buried (pid: 1330)
+worker 1 buried after 1 seconds
+worker 2 buried after 1 seconds
+worker 3 buried after 1 seconds
+worker 4 buried after 1 seconds
+goodbye to uWSGI.
+*** Starting uWSGI 2.0.18 (64bit) on [Thu Apr 11 18:40:14 2019] ***
+compiled with version: 7.3.0 on 11 April 2019 03:32:10
+os: Linux-4.4.0-17134-Microsoft #706-Microsoft Mon Apr 01 18:13:00 PST 2019
+nodename: VivaLaVida
+machine: x86_64
+clock source: unix
+pcre jit disabled
+detected number of CPU cores: 8
+current working directory: /mnt/f/study/python/demo/03-Django/03-天天生鲜/dailyfresh
+writing pidfile to uwsgi.pid
+detected binary path: /home/cicades/.virtualenvs/dailyfresh/bin/uwsgi
+chdir() to /mnt/f/study/python/demo/03-django/03-天天生鲜/dailyfresh/
+your processes number limit is 7823
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+!!! it looks like your kernel does not support pthread robust mutexes !!!
+!!! falling back to standard pthread mutexes !!!
+thunder lock: disabled (you can enable it with --thunder-lock)
+TCP_DEFER_ACCEPT setsockopt(): Protocol not available [core/socket.c line 744]
+uwsgi socket 0 bound to TCP address 127.0.0.1:8000 fd 3
+Python version: 3.6.7 (default, Oct 22 2018, 11:32:17)  [GCC 8.2.0]
+Set PythonHome to /home/cicades/.virtualenvs/dailyfresh
+Python main interpreter initialized at 0x7fffbbe40850
+python threads support enabled
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 416880 bytes (407 KB) for 8 cores
+*** Operational MODE: preforking+threaded ***
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0x7fffbbe40850 pid: 1360 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 1360)
+spawned uWSGI worker 1 (pid: 1364, cores: 2)
+spawned uWSGI worker 2 (pid: 1366, cores: 2)
+spawned uWSGI worker 3 (pid: 1368, cores: 2)
+spawned uWSGI worker 4 (pid: 1370, cores: 2)
+无缓存获，取数据
+[pid: 1366|app: 0|req: 1/1] 127.0.0.1 () {40 vars in 931 bytes} [Thu Apr 11 18:40:24 2019] GET / => generated 14073 bytes in 1291 msecs (HTTP/1.1 200) 4 headers in 177 bytes (1 switches on core 0)
+[pid: 1364|app: 0|req: 1/2] 127.0.0.1 () {40 vars in 949 bytes} [Thu Apr 11 18:40:25 2019] GET /favicon.ico => generated 85 bytes in 622 msecs (HTTP/1.1 404) 3 headers in 155 bytes (1 switches on core 0)
+[pid: 1368|app: 0|req: 1/3] 127.0.0.1 () {42 vars in 1028 bytes} [Thu Apr 11 18:40:28 2019] GET /user/login => generated 2144 bytes in 775 msecs (HTTP/1.1 200) 5 headers in 299 bytes (1 switches on core 0)
+[pid: 1364|app: 0|req: 2/4] 127.0.0.1 () {50 vars in 1215 bytes} [Thu Apr 11 18:40:40 2019] POST /user/login => generated 0 bytes in 196 msecs (HTTP/1.1 302) 7 headers in 370 bytes (1 switches on core 1)
+[pid: 1366|app: 0|req: 2/5] 127.0.0.1 () {44 vars in 1067 bytes} [Thu Apr 11 18:40:40 2019] GET / => generated 14193 bytes in 70 msecs (HTTP/1.1 200) 4 headers in 177 bytes (2 switches on core 1)
