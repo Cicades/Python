@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图书管理</title>
+</head>
+<body>
+    <div class="wrap">
+        <div>
+            <form action="/" method="post">
+                {{ form.csrf_token }}
+                {{ form.author_name.label }}
+                {{ form.author_name }}
+                {% for msg in form.author_name.erros %}
+                    <p>{{ msg }}</p>
+                {% endfor %}
+                {{ form.book_name.label }}
+                {{ form.book_name }}
+                {% for msg in form.book_name.erros %}
+                    <p>{{ msg }}</p>
+                {% endfor %}
+                {{ form.submit }}
+            </form>
+        </div>
+        <hr>
+        <ul>
+            {% for author in authors %}
+            <li>{{ author.name }}</li>
+                <ul>
+                    {% for book in author.books %}
+                        <li>{{ book.name }}</li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
